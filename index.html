@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Brasa Burger · Hamburgueria artesanal, pedido e entrega online</title>
+<meta name="description" content="Hamburgueria artesanal Brasa Burger: blend próprio na chapa e pão brioche da casa. Monte seu burger camada por camada, peça pelo site e acompanhe a entrega em tempo real.">
+<meta name="theme-color" content="#0c0a09">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Brasa Burger, hamburgueria artesanal">
+<meta property="og:description" content="Monte seu burger camada por camada, peça pelo site e acompanhe a entrega em tempo real.">
+<link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=DM+Sans:opsz,wght@9..40,400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-loading" id="top">
+
+<svg class="grain" aria-hidden="true"><filter id="grainFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3"/></filter><rect width="100%" height="100%" filter="url(#grainFilter)"/></svg>
+
+<!-- ============ LOADER ============ -->
+<div class="loader" id="loader">
+  <div class="loader-stack" aria-hidden="true">
+    <span class="ls ls-bun-top"></span>
+    <span class="ls ls-veg"></span>
+    <span class="ls ls-cheese"></span>
+    <span class="ls ls-patty"></span>
+    <span class="ls ls-bun-bot"></span>
+  </div>
+  <p class="loader-txt">acendendo a chapa<span class="dots"><i>.</i><i>.</i><i>.</i></span></p>
+</div>
+
+<!-- ============ HEADER ============ -->
+<header class="hdr" id="hdr">
+  <div class="hdr-in">
+    <a class="brand" href="#top" aria-label="Brasa Burger, início">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="34" height="34">
+          <defs><linearGradient id="gFlame" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#ff5a1f"/><stop offset="1" stop-color="#ffb92e"/></linearGradient></defs>
+          <path d="M24 3c6 8-2 11 1 16 2 3 6 1 6-4 5 5 8 11 8 17 0 8.8-6.7 13-15 13S9 40.8 9 32c0-9 7-15 9-20 1.6-4 4-7 6-9Z" fill="url(#gFlame)"/>
+          <path d="M24 20c3 4-1 6 .5 8.5 1 1.6 3 .6 3-2 2.5 2.6 4 5.6 4 8.7 0 4.6-3.4 6.8-7.5 6.8S16 39.8 16 35.2c0-4.7 3.5-7.8 4.5-10.4.8-2 2-3.6 3.5-4.8Z" fill="#fff4e3" opacity=".9"/>
+        </svg>
+      </span>
+      <span class="brand-txt">Brasa<em>hamburgueria artesanal</em></span>
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="#cardapio">Cardápio</a>
+      <a href="#montar">Monte o seu</a>
+      <a href="#extras">Acompanha</a>
+      <a href="#entrega">Entrega</a>
+      <a href="#visita">Visite</a>
+    </nav>
+
+    <div class="hdr-actions">
+      <button class="btn btn-track" id="trackBtn" hidden>
+        <span class="pulse-dot" aria-hidden="true"></span> Meu pedido
+      </button>
+      <button class="btn btn-primary btn-cart" id="cartBtn" aria-label="Abrir carrinho">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M7 4h10l1 3h2a1 1 0 0 1 1 1.13l-1.2 9.6A3 3 0 0 1 16.83 20H7.17a3 3 0 0 1-2.98-2.27L3 8.13A1 1 0 0 1 4 7h2l1-3Zm1.44 3h7.12l-.4-1H8.84l-.4 1ZM9 11v5h2v-5H9Zm4 0v5h2v-5h-2Z"/></svg>
+        <span class="cart-label">Carrinho</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ PALCO 3D: HERO + ANATOMIA ============ -->
+<section class="stage-wrap" id="stage">
+  <div class="stage-sticky">
+    <div class="glow glow-a" aria-hidden="true"></div>
+    <div class="glow glow-b" aria-hidden="true"></div>
+
+    <!-- marca gigante ao fundo: o burger passa por cima dela -->
+    <div class="stage-word" aria-hidden="true"><span class="sw-in">BRASA</span></div>
+
+    <!-- fumaça da chapa: puffs borrados subindo + neblina rasteira -->
+    <div class="smoke" id="smoke" aria-hidden="true">
+      <span class="pf" style="--x:26%;--sz:40vmin;--d:27s;--dl:-3s;--dx:7vw;--o:.72"></span>
+      <span class="pf" style="--x:45%;--sz:54vmin;--d:34s;--dl:-14s;--dx:-6vw;--o:.62"></span>
+      <span class="pf" style="--x:59%;--sz:33vmin;--d:23s;--dl:-8s;--dx:9vw;--o:.78"></span>
+      <span class="pf" style="--x:72%;--sz:46vmin;--d:31s;--dl:-21s;--dx:-8vw;--o:.52"></span>
+      <span class="pf" style="--x:13%;--sz:29vmin;--d:29s;--dl:-17s;--dx:12vw;--o:.46"></span>
+      <span class="pf" style="--x:87%;--sz:38vmin;--d:37s;--dl:-26s;--dx:-13vw;--o:.44"></span>
+      <span class="pf ash" style="--x:35%;--sz:62vmin;--d:41s;--dl:-11s;--dx:-9vw;--o:.5"></span>
+      <span class="pf ash" style="--x:66%;--sz:56vmin;--d:47s;--dl:-30s;--dx:10vw;--o:.44"></span>
+      <span class="pf ash" style="--x:50%;--sz:44vmin;--d:33s;--dl:-19s;--dx:5vw;--o:.36"></span>
+      <span class="fog" style="--b:-9vh;--d:38s;--dl:0s"></span>
+      <span class="fog" style="--b:-1vh;--d:53s;--dl:-19s"></span>
+    </div>
+
+    <!-- cama de brasa embaixo do burger: acende quando o mouse chega perto -->
+    <div class="hot-plate" aria-hidden="true"></div>
+
+    <!-- fagulhas subindo -->
+    <div class="embers" aria-hidden="true">
+      <i style="--x:17%;--sz:3px;--d:15s;--dl:-2s;--dx:6vw"></i>
+      <i style="--x:29%;--sz:2px;--d:19s;--dl:-11s;--dx:-4vw"></i>
+      <i style="--x:38%;--sz:4px;--d:13s;--dl:-6s;--dx:3vw"></i>
+      <i style="--x:47%;--sz:2px;--d:22s;--dl:-16s;--dx:7vw"></i>
+      <i style="--x:55%;--sz:3px;--d:17s;--dl:-9s;--dx:-6vw"></i>
+      <i style="--x:63%;--sz:2px;--d:24s;--dl:-20s;--dx:5vw"></i>
+      <i style="--x:71%;--sz:3px;--d:16s;--dl:-4s;--dx:-8vw"></i>
+      <i style="--x:80%;--sz:2px;--d:21s;--dl:-13s;--dx:4vw"></i>
+      <i style="--x:88%;--sz:3px;--d:18s;--dl:-7s;--dx:-5vw"></i>
+      <i style="--x:8%;--sz:2px;--d:26s;--dl:-22s;--dx:9vw"></i>
+    </div>
+
+    <div class="stage-vig" aria-hidden="true"></div>
+
+    <div class="burger-wrap" id="burgerWrap" aria-hidden="true">
+      <div class="burger-stack" id="burgerStack"></div>
+    </div>
+
+    <!-- fagulhas na frente, pra dar profundidade -->
+    <div class="embers embers-front" aria-hidden="true">
+      <i style="--x:34%;--sz:3px;--d:14s;--dl:-5s;--dx:5vw"></i>
+      <i style="--x:52%;--sz:4px;--d:11s;--dl:-8s;--dx:-4vw"></i>
+      <i style="--x:67%;--sz:3px;--d:16s;--dl:-2s;--dx:6vw"></i>
+      <i style="--x:76%;--sz:2px;--d:13s;--dl:-10s;--dx:-3vw"></i>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero" id="heroCopy">
+      <div class="hero-text">
+        <p class="eyebrow reveal"><span class="live-dot" aria-hidden="true"></span> Aberto hoje até 23h30 · entrega em ~35 min</p>
+        <h1 class="reveal">
+          <span class="h1-line">Carne na</span>
+          <span class="h1-line h1-accent">brasa,</span>
+          <span class="h1-line">pedido em</span>
+          <span class="h1-line">3 toques.</span>
+        </h1>
+        <p class="hero-sub reveal">Blend próprio de maminha, acém e costela. Pão brioche assado todo dia.
+          Monta o teu do zero e acompanha o entregador saindo daqui, tudo nesta página.</p>
+        <div class="hero-cta reveal">
+          <a class="btn btn-primary btn-lg" href="#cardapio">Pedir agora</a>
+          <a class="btn btn-outline btn-lg" href="#montar">Montar meu burger</a>
+        </div>
+      </div>
+      <ul class="hero-stats reveal">
+        <li><b data-count="4.9" data-dec="1">0</b><span>nota média<br>em 1.240 pedidos</span></li>
+        <li><b data-count="35">0</b><span>minutos<br>na média de entrega</span></li>
+        <li><b data-count="180">0</b><span>gramas<br>de blend na chapa</span></li>
+      </ul>
+      <p class="burger-cue" id="dragHint" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M12 2.8 8.9 6.5h2.2v3.4H7.7V7.7L4 10.8l3.7 3.1v-2.2h3.4v3.4H8.9l3.1 3.7 3.1-3.7h-2.2v-3.4h3.4v2.2l3.7-3.1L16.3 7.7v2.2h-3.4V6.5h2.2L12 2.8Z"/></svg>
+        passa o mouse pra abrir · arrasta pra girar
+      </p>
+    </div>
+
+    <!-- ANATOMIA (dirigida por scroll) -->
+    <div class="anatomy" id="anatomy" aria-hidden="true">
+      <svg class="leaders" id="leaders" aria-hidden="true"></svg>
+      <div class="label-layer" id="labelLayer"></div>
+      <div class="anatomy-head">
+        <p class="eyebrow">Anatomia</p>
+        <h2>O Brasa Clássico,<br>camada por camada</h2>
+      </div>
+      <ol class="anatomy-list" id="anatomyList"></ol>
+    </div>
+
+    <div class="scroll-hint" id="scrollHint" aria-hidden="true"><span></span>role</div>
+  </div>
+</section>
+
+<!-- ============ TICKER ============ -->
+<section class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <span>chapa a 280°</span><i>◆</i><span>pão brioche da casa</span><i>◆</i><span>blend 180g</span><i>◆</i>
+    <span>bacon em fatia grossa</span><i>◆</i><span>frete grátis acima de R$ 90</span><i>◆</i>
+    <span>chapa a 280°</span><i>◆</i><span>pão brioche da casa</span><i>◆</i><span>blend 180g</span><i>◆</i>
+    <span>bacon em fatia grossa</span><i>◆</i><span>frete grátis acima de R$ 90</span><i>◆</i>
+  </div>
+</section>
+
+<!-- ============ CARDÁPIO ============ -->
+<section class="sec" id="cardapio">
+  <div class="sec-head reveal">
+    <p class="eyebrow">Cardápio</p>
+    <h2 class="sec-title">Os que saem mais<br>da nossa chapa</h2>
+    <p class="sec-sub">Blend prensado na hora, pão assado no dia. Escolhe o teu que ele já cai no carrinho.</p>
+  </div>
+  <div class="menu-filters reveal" id="menuFilters" role="tablist" aria-label="Filtrar cardápio"></div>
+  <div class="menu-grid" id="menuGrid"></div>
+</section>
+
+<!-- ============ MONTE O SEU ============ -->
+<section class="sec sec-build" id="montar">
+  <div class="sec-head reveal">
+    <p class="eyebrow">Interativo</p>
+    <h2 class="sec-title">Monte o seu<br>e veja acontecer</h2>
+    <p class="sec-sub">Clique nos ingredientes: o burger monta na sua frente, camada por camada.</p>
+  </div>
+
+  <div class="builder reveal">
+    <div class="builder-stage" id="buildStage">
+      <div class="burger-stack build" id="buildStack" aria-hidden="true"></div>
+      <div class="builder-badge"><span class="pulse-dot" aria-hidden="true"></span> montando ao vivo</div>
+      <div class="builder-drag">passe o mouse pra inclinar</div>
+      <div class="builder-height" id="builderHeight"><b>4,5</b><span>cm de altura</span></div>
+    </div>
+
+    <div class="builder-panel">
+      <div class="bp-head">
+        <div class="bp-head-txt">
+          <h3>Seu burger</h3>
+          <p id="builderStackTxt">Pão brioche + blend 160g</p>
+        </div>
+        <div class="bp-price"><small>total</small><b id="builderPrice">R$ 26,00</b></div>
+      </div>
+
+      <div class="bp-groups" id="builderGroups"></div>
+
+      <div class="bp-foot">
+        <div class="qty" role="group" aria-label="Quantidade">
+          <button type="button" data-bq="-1" aria-label="Diminuir quantidade">−</button>
+          <b id="builderQty">1</b>
+          <button type="button" data-bq="1" aria-label="Aumentar quantidade">+</button>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block" id="builderAdd">Adicionar ao carrinho</button>
+      </div>
+      <button class="bp-reset" id="builderReset">limpar e começar de novo</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXTRAS ============ -->
+<section class="sec sec-light" id="extras">
+  <div class="sec-head reveal">
+    <p class="eyebrow">Pra acompanhar</p>
+    <h2 class="sec-title">Fritas, bebida<br>e o resto do rolê</h2>
+  </div>
+  <div class="extras-cols">
+    <div class="extras-col reveal">
+      <h3 class="extras-title">Acompanhamentos</h3>
+      <ul class="extras-list" id="sidesList"></ul>
+    </div>
+    <div class="extras-col reveal">
+      <h3 class="extras-title">Bebidas</h3>
+      <ul class="extras-list" id="drinksList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ENTREGA ============ -->
+<section class="sec sec-delivery" id="entrega">
+  <div class="sec-head reveal">
+    <p class="eyebrow">Entrega própria</p>
+    <h2 class="sec-title">A gente mesmo<br>leva até você</h2>
+    <p class="sec-sub">Motoboy da casa, sem intermediário e sem taxa de aplicativo. Frete grátis acima de R$ 90.</p>
+  </div>
+
+  <div class="delivery reveal">
+    <div class="map-card">
+      <div class="map-legend">
+        <span><i class="dot-store"></i> Nossa cozinha</span>
+        <span><i class="dot-zone"></i> Raio de entrega · 6 km</span>
+      </div>
+      <svg class="map" viewBox="0 0 520 420" role="img" aria-label="Mapa estilizado da área de entrega">
+        <defs>
+          <radialGradient id="zoneGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="#ff5a1f" stop-opacity=".30"/>
+            <stop offset="1" stop-color="#ff5a1f" stop-opacity="0"/>
+          </radialGradient>
+          <path id="routeDemo" d="M260 210 L340 210 L340 128 L430 128 L430 82" fill="none"/>
+        </defs>
+        <rect width="520" height="420" fill="#120e0c"/>
+        <g class="blocks" fill="#1b1512">
+          <rect x="24" y="26" width="120" height="90" rx="6"/><rect x="164" y="26" width="150" height="60" rx="6"/>
+          <rect x="336" y="26" width="72" height="90" rx="6"/><rect x="428" y="26" width="68" height="54" rx="6"/>
+          <rect x="24" y="140" width="80" height="120" rx="6"/><rect x="124" y="140" width="110" height="52" rx="6"/>
+          <rect x="124" y="212" width="110" height="48" rx="6"/><rect x="356" y="140" width="140" height="70" rx="6"/>
+          <rect x="356" y="232" width="80" height="80" rx="6"/><rect x="456" y="232" width="40" height="80" rx="6"/>
+          <rect x="24" y="284" width="130" height="110" rx="6"/><rect x="176" y="284" width="150" height="110" rx="6"/>
+          <rect x="348" y="336" width="148" height="58" rx="6"/>
+        </g>
+        <g class="streets" stroke="#2b211c" stroke-width="10" stroke-linecap="round">
+          <path d="M0 128 H520"/><path d="M0 222 H520"/><path d="M0 324 H520"/>
+          <path d="M112 0 V420"/><path d="M244 0 V420"/><path d="M340 0 V420"/><path d="M444 0 V420"/>
+        </g>
+        <circle cx="260" cy="210" r="190" fill="url(#zoneGrad)"/>
+        <circle class="ring r1" cx="260" cy="210" r="70" fill="none" stroke="#ff5a1f" stroke-opacity=".5"/>
+        <circle class="ring r2" cx="260" cy="210" r="70" fill="none" stroke="#ff5a1f" stroke-opacity=".5"/>
+        <circle class="ring r3" cx="260" cy="210" r="70" fill="none" stroke="#ff5a1f" stroke-opacity=".5"/>
+        <use href="#routeDemo" stroke="#ffb92e" stroke-width="3" stroke-dasharray="7 7" stroke-opacity=".55"/>
+        <g class="map-pin">
+          <circle cx="260" cy="210" r="17" fill="#ff5a1f"/>
+          <circle cx="260" cy="210" r="17" fill="none" stroke="#fff4e3" stroke-opacity=".35" stroke-width="2"/>
+          <path d="M252 206h16v3h-16zm0 5h16v6a3 3 0 0 1-3 3h-10a3 3 0 0 1-3-3z" fill="#fff4e3"/>
+        </g>
+        <g class="rider-demo">
+          <circle r="9" fill="#ffb92e"/>
+          <animateMotion dur="7s" repeatCount="indefinite" rotate="auto"><mpath href="#routeDemo"/></animateMotion>
+        </g>
+        <g class="house-pin" transform="translate(430 82)">
+          <circle r="12" fill="#1b1512" stroke="#ffb92e" stroke-width="2"/>
+          <path d="M-5 1 0-4 5 1v5a1 1 0 0 1-1 1h-8a1 1 0 0 1-1-1z" fill="#ffb92e"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="delivery-side">
+      <form class="cep-check" id="cepForm" novalidate>
+        <label for="cepInput">Ver se entregamos no seu endereço</label>
+        <div class="cep-row">
+          <input id="cepInput" name="cep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9">
+          <button class="btn btn-primary" type="submit">Consultar</button>
+        </div>
+        <p class="cep-result" id="cepResult" role="status"></p>
+      </form>
+
+      <ul class="zones" id="zonesList"></ul>
+
+      <div class="delivery-note">
+        <strong>Retirada no balcão</strong> fica pronto em 15 a 20 min e sai sem taxa.
+        Você escolhe na hora de fechar o pedido.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DEPOIMENTOS ============ -->
+<section class="sec sec-reviews sec-sun">
+  <div class="sec-head reveal">
+    <p class="eyebrow">Quem já comeu</p>
+    <h2 class="sec-title">4,9 de 5 em<br>1.240 pedidos</h2>
+  </div>
+  <div class="reviews-marquee">
+    <div class="reviews-track" id="reviewsTrack"></div>
+  </div>
+</section>
+
+<!-- ============ VISITA ============ -->
+<section class="sec sec-visit" id="visita">
+  <div class="visit reveal">
+    <div class="visit-copy">
+      <p class="eyebrow">Ou vem pra cá</p>
+      <h2 class="sec-title">Balcão aberto,<br>chapa ligada</h2>
+      <p class="sec-sub">Dá pra sentar no balcão e ver o burger nascer. Sem reserva, chega e pede.</p>
+      <dl class="visit-info">
+        <div><dt>Endereço</dt><dd>Rua das Cerejeiras, 128, Centro</dd></div>
+        <div><dt>Horário</dt><dd>Terça a domingo, 18h às 23h30<br><span class="muted">segunda a chapa descansa</span></dd></div>
+        <div><dt>WhatsApp</dt><dd><a href="https://wa.me/5511999990000" target="_blank" rel="noopener">(11) 99999-0000</a></dd></div>
+        <div><dt>Instagram</dt><dd><a href="https://instagram.com/" target="_blank" rel="noopener">@brasaburger</a></dd></div>
+      </dl>
+      <a class="btn btn-primary btn-lg" href="#cardapio">Fazer meu pedido</a>
+    </div>
+    <div class="visit-card">
+      <div class="hours-now" id="hoursNow"><span class="pulse-dot" aria-hidden="true"></span><b>Verificando horário…</b></div>
+      <ul class="hours-list" id="hoursList"></ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="ftr">
+  <div class="ftr-in">
+    <div class="ftr-brand">
+      <span class="brand-txt">Brasa<em>hamburgueria artesanal</em></span>
+      <p>Rua das Cerejeiras, 128, Centro<br>Ter a dom · 18h às 23h30</p>
+    </div>
+    <nav class="ftr-nav">
+      <a href="#cardapio">Cardápio</a><a href="#montar">Monte o seu</a>
+      <a href="#entrega">Entrega</a><a href="#visita">Visite</a>
+    </nav>
+    <p class="ftr-demo">Site de demonstração · dados e pedidos são fictícios · feito pela <strong>Geada Tech</strong></p>
+  </div>
+</footer>
+
+<!-- ============ CARRINHO ============ -->
+<div class="scrim" id="scrim" hidden></div>
+
+<aside class="cart" id="cart" aria-label="Carrinho" aria-hidden="true">
+  <header class="cart-head">
+    <h2>Seu pedido</h2>
+    <button class="icon-btn" id="cartClose" aria-label="Fechar carrinho">
+      <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="m12 10.6 5-5 1.4 1.4-5 5 5 5L17 18.4l-5-5-5 5L5.6 17l5-5-5-5L7 5.6z"/></svg>
+    </button>
+  </header>
+
+  <div class="cart-body" id="cartBody"></div>
+
+  <div class="cart-empty" id="cartEmpty">
+    <div class="ce-art" id="ceArt" aria-hidden="true"></div>
+    <p>Carrinho vazio.<br><span class="muted">Escolhe um do cardápio ou monta o seu.</span></p>
+    <a class="btn btn-outline" href="#cardapio" data-close-cart>Ver cardápio</a>
+  </div>
+
+  <div class="cart-upsell" id="cartUpsell" hidden>
+    <div>
+      <b>Fecha o combo</b>
+      <span>Fritas rústicas + refri por R$ 16,00</span>
+    </div>
+    <button class="btn btn-mustard" id="comboAdd">Adicionar</button>
+  </div>
+
+  <footer class="cart-foot" id="cartFoot" hidden>
+    <div class="ship-progress" id="shipProgress">
+      <div class="sp-bar"><i></i></div>
+      <span class="sp-txt"></span>
+    </div>
+    <dl class="cart-totals">
+      <div><dt>Subtotal</dt><dd id="cartSubtotal">R$ 0,00</dd></div>
+      <div class="ct-total"><dt>Total</dt><dd id="cartTotal">R$ 0,00</dd></div>
+    </dl>
+    <button class="btn btn-primary btn-lg btn-block" id="checkoutBtn">Finalizar pedido</button>
+  </footer>
+</aside>
+
+<!-- ============ CHECKOUT ============ -->
+<div class="modal" id="checkout" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
+  <div class="modal-card">
+    <header class="modal-head">
+      <div>
+        <p class="eyebrow" id="checkoutStep">Etapa 1 de 3</p>
+        <h2 id="checkoutTitle">Como você quer receber?</h2>
+      </div>
+      <button class="icon-btn" id="checkoutClose" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="m12 10.6 5-5 1.4 1.4-5 5 5 5L17 18.4l-5-5-5 5L5.6 17l5-5-5-5L7 5.6z"/></svg>
+      </button>
+    </header>
+
+    <div class="steps-bar" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+
+    <form id="checkoutForm" novalidate>
+      <!-- etapa 1: entrega -->
+      <section class="step is-on" data-step="1">
+        <div class="choice-grid">
+          <label class="choice">
+            <input type="radio" name="mode" value="delivery" checked>
+            <span class="choice-in">
+              <b>Entrega</b>
+              <small>Motoboy da casa · 25 a 60 min</small>
+            </span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="mode" value="pickup">
+            <span class="choice-in">
+              <b>Retirada</b>
+              <small>Pronto em 15 a 20 min · sem taxa</small>
+            </span>
+          </label>
+        </div>
+
+        <div class="fields" id="deliveryFields">
+          <div class="f f-cep">
+            <label for="ckCep">CEP</label>
+            <input id="ckCep" name="cep" inputmode="numeric" maxlength="9" placeholder="00000-000" autocomplete="postal-code">
+            <small class="f-hint" id="ckCepHint">preenche o resto sozinho</small>
+          </div>
+          <div class="f f-street">
+            <label for="ckStreet">Rua</label>
+            <input id="ckStreet" name="street" autocomplete="address-line1" placeholder="Rua das Cerejeiras">
+          </div>
+          <div class="f f-num">
+            <label for="ckNumber">Número</label>
+            <input id="ckNumber" name="number" inputmode="numeric" placeholder="128">
+          </div>
+          <div class="f f-comp">
+            <label for="ckComp">Complemento</label>
+            <input id="ckComp" name="comp" placeholder="apto 42 / bloco B">
+          </div>
+          <div class="f f-hood">
+            <label for="ckHood">Bairro</label>
+            <select id="ckHood" name="hood"></select>
+          </div>
+          <div class="f f-name">
+            <label for="ckName">Seu nome</label>
+            <input id="ckName" name="name" autocomplete="name" placeholder="Como te chamamos?">
+          </div>
+          <div class="f f-phone">
+            <label for="ckPhone">WhatsApp</label>
+            <input id="ckPhone" name="phone" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-0000" maxlength="16">
+          </div>
+          <div class="f f-note">
+            <label for="ckNote">Observação pra cozinha</label>
+            <input id="ckNote" name="note" placeholder="sem cebola, ponto da carne, referência do prédio…">
+          </div>
+        </div>
+      </section>
+
+      <!-- etapa 2: pagamento -->
+      <section class="step" data-step="2">
+        <div class="pay-grid">
+          <label class="choice">
+            <input type="radio" name="pay" value="pix" checked>
+            <span class="choice-in"><b>Pix</b><small>confirma na hora</small></span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="pay" value="card">
+            <span class="choice-in"><b>Cartão na entrega</b><small>crédito ou débito na maquininha</small></span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="pay" value="cash">
+            <span class="choice-in"><b>Dinheiro</b><small>a gente leva troco</small></span>
+          </label>
+        </div>
+
+        <div class="pay-extra" id="payPix">
+          <div class="pix-qr" id="pixQr" aria-hidden="true"></div>
+          <div class="pix-txt">
+            <b>Pix copia e cola</b>
+            <p class="muted">QR de demonstração. Num site publicado ele vira a chave real da hamburgueria.</p>
+            <code id="pixCode">brasa-burger-demo</code>
+            <button class="btn btn-outline btn-sm" type="button" id="pixCopy">Copiar código</button>
+          </div>
+        </div>
+
+        <div class="pay-extra" id="payCash" hidden>
+          <label for="ckChange">Precisa de troco pra quanto?</label>
+          <input id="ckChange" name="change" inputmode="numeric" placeholder="R$ 100,00">
+        </div>
+      </section>
+
+      <!-- etapa 3: revisão -->
+      <section class="step" data-step="3">
+        <div class="review" id="reviewBox"></div>
+      </section>
+
+      <footer class="modal-foot">
+        <button class="btn btn-ghost" type="button" id="ckBack">Voltar</button>
+        <div class="modal-foot-total"><small>total</small><b id="ckTotal">R$ 0,00</b></div>
+        <button class="btn btn-primary btn-lg" type="button" id="ckNext">Continuar</button>
+      </footer>
+    </form>
+  </div>
+</div>
+
+<!-- ============ RASTREIO ============ -->
+<div class="modal" id="tracking" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="trackTitle">
+  <div class="modal-card modal-track">
+    <header class="modal-head">
+      <div>
+        <p class="eyebrow" id="trackCode">pedido</p>
+        <h2 id="trackTitle">Pedido confirmado</h2>
+      </div>
+      <button class="icon-btn" id="trackClose" aria-label="Fechar">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="m12 10.6 5-5 1.4 1.4-5 5 5 5L17 18.4l-5-5-5 5L5.6 17l5-5-5-5L7 5.6z"/></svg>
+      </button>
+    </header>
+
+    <div class="track-body">
+      <div class="track-map">
+        <svg viewBox="0 0 520 300" role="img" aria-label="Mapa do trajeto da entrega">
+          <defs><path id="routeLive" d="M60 240 L170 240 L170 150 L300 150 L300 84 L456 84" fill="none"/></defs>
+          <rect width="520" height="300" fill="#120e0c"/>
+          <g fill="#1b1512">
+            <rect x="18" y="18" width="120" height="90" rx="6"/><rect x="196" y="18" width="80" height="54" rx="6"/>
+            <rect x="330" y="18" width="70" height="40" rx="6"/><rect x="196" y="176" width="80" height="106" rx="6"/>
+            <rect x="330" y="176" width="160" height="106" rx="6"/><rect x="18" y="130" width="120" height="70" rx="6"/>
+          </g>
+          <g stroke="#2b211c" stroke-width="9" stroke-linecap="round">
+            <path d="M0 150 H520"/><path d="M0 240 H520"/><path d="M0 84 H520"/>
+            <path d="M170 0 V300"/><path d="M300 0 V300"/><path d="M456 0 V300"/>
+          </g>
+          <use href="#routeLive" stroke="#3c2d24" stroke-width="7" stroke-linecap="round"/>
+          <use href="#routeLive" stroke="#5c4437" stroke-width="7" stroke-dasharray="1 11" stroke-linecap="round"/>
+          <use href="#routeLive" id="routeDone" stroke="#ff5a1f" stroke-width="7" stroke-linecap="round"/>
+          <g transform="translate(60 240)">
+            <circle r="13" fill="#ff5a1f"/><path d="M-7-4h14v3h-14zm0 5h14v6a3 3 0 0 1-3 3h-8a3 3 0 0 1-3-3z" fill="#fff4e3"/>
+          </g>
+          <g transform="translate(456 84)">
+            <circle r="13" fill="#1b1512" stroke="#ffb92e" stroke-width="2"/>
+            <path d="M-6 1 0-5 6 1v6a1 1 0 0 1-1 1h-10a1 1 0 0 1-1-1z" fill="#ffb92e"/>
+          </g>
+          <g id="riderLive" class="rider-live" transform="translate(60 240)">
+            <circle r="16" fill="#ffb92e" opacity=".22" class="rider-halo"/>
+            <circle r="10" fill="#ffb92e"/>
+            <path d="M-4-4h8v2h-8zm0 3h8v4a1.2 1.2 0 0 1-1.2 1.2h-5.6A1.2 1.2 0 0 1-4 3z" fill="#1a1310"/>
+          </g>
+        </svg>
+        <div class="track-eta">
+          <small id="etaLabel">chega em</small>
+          <b id="etaValue">···</b>
+        </div>
+      </div>
+
+      <ol class="track-steps" id="trackSteps"></ol>
+
+      <div class="track-rider" id="trackRider" hidden>
+        <div class="tr-av" aria-hidden="true">RS</div>
+        <div class="tr-txt"><b>Rafael está levando seu pedido</b><span>Moto Honda CG · placa BRS-1240</span></div>
+        <a class="btn btn-outline btn-sm" href="https://wa.me/5511999990000" target="_blank" rel="noopener">Chamar</a>
+      </div>
+
+      <div class="track-summary" id="trackSummary"></div>
+      <p class="track-demo">Simulação de demonstração: os status andam sozinhos pra você ver como fica. Em produção isso vem do sistema da cozinha.</p>
+      <button class="btn btn-ghost btn-block btn-sm" id="trackCancel">Cancelar pedido de demonstração</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<div class="mobile-bar" id="mobileBar">
+  <a class="btn btn-outline" href="#cardapio">Cardápio</a>
+  <button class="btn btn-primary" id="mobileCart"><span id="mobileCartTxt">Ver pedido</span></button>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/burger.js"></script>
+</body>
+</html>
