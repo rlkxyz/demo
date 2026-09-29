@@ -143,9 +143,9 @@
         </div>
       </div>
       <ul class="hero-stats reveal">
-        <li><b data-count="4.9" data-dec="1">0</b><span>nota média<br>em 1.240 pedidos</span></li>
-        <li><b data-count="35">0</b><span>minutos<br>na média de entrega</span></li>
-        <li><b data-count="180">0</b><span>gramas<br>de blend na chapa</span></li>
+        <li><b data-count="4.9" data-dec="1" data-suffix="/5">4,9<small>/5</small></b><span>nota média<br>em 1.240 pedidos</span></li>
+        <li><b data-count="35">35</b><span>minutos<br>na média de entrega</span></li>
+        <li><b data-count="180">180</b><span>gramas<br>de blend na chapa</span></li>
       </ul>
       <p class="burger-cue" id="dragHint" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M12 2.8 8.9 6.5h2.2v3.4H7.7V7.7L4 10.8l3.7 3.1v-2.2h3.4v3.4H8.9l3.1 3.7 3.1-3.7h-2.2v-3.4h3.4v2.2l3.7-3.1L16.3 7.7v2.2h-3.4V6.5h2.2L12 2.8Z"/></svg>
@@ -328,7 +328,7 @@
 <section class="sec sec-reviews sec-sun">
   <div class="sec-head reveal">
     <p class="eyebrow">Quem já comeu</p>
-    <h2 class="sec-title">4,9 de 5 em<br>1.240 pedidos</h2>
+    <h2 class="sec-title">4,9/5 em<br>1.240 pedidos</h2>
   </div>
   <div class="reviews-marquee">
     <div class="reviews-track" id="reviewsTrack"></div>
@@ -396,7 +396,7 @@
   <div class="cart-upsell" id="cartUpsell" hidden>
     <div>
       <b>Fecha o combo</b>
-      <span>Fritas rústicas + refri por R$ 16,00</span>
+      <span>Fritas rústicas + refri por <b class="nowrap">R$ 16,00</b></span>
     </div>
     <button class="btn btn-mustard" id="comboAdd">Adicionar</button>
   </div>
@@ -411,15 +411,53 @@
       <div class="ct-total"><dt>Total</dt><dd id="cartTotal">R$ 0,00</dd></div>
     </dl>
     <button class="btn btn-primary btn-lg btn-block" id="checkoutBtn">Finalizar pedido</button>
+    <p class="cart-demo"><span class="demo-badge">demo</span> Nenhum pedido real é enviado.</p>
   </footer>
 </aside>
+
+<!-- ============ FICHA DO PRODUTO ============ -->
+<div class="modal modal-product" id="product" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="pdName">
+  <div class="modal-card pd-card">
+    <div class="pd-art" id="pdArt"></div>
+    <button class="icon-btn pd-close" id="pdClose" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="m12 10.6 5-5 1.4 1.4-5 5 5 5L17 18.4l-5-5-5 5L5.6 17l5-5-5-5L7 5.6z"/></svg>
+    </button>
+    <div class="pd-body">
+      <h2 id="pdName">Burger</h2>
+      <p class="pd-desc" id="pdDesc"></p>
+      <p class="pd-price" id="pdPrice"></p>
+
+      <label class="pd-combo">
+        <input type="checkbox" id="pdCombo">
+        <span class="pd-combo-in">
+          <span class="pd-check" aria-hidden="true"></span>
+          <span class="pd-combo-txt"><b>Fazer combo</b><small>fritas rústicas 300g + lata 350ml</small></span>
+          <em>+ R$ 16,00</em>
+        </span>
+      </label>
+
+      <div class="f pd-note">
+        <label for="pdNote">Alguma observação?</label>
+        <input id="pdNote" maxlength="80" placeholder="sem cebola, ponto da carne…" enterkeyhint="done">
+      </div>
+    </div>
+    <footer class="pd-foot">
+      <div class="qty" role="group" aria-label="Quantidade">
+        <button type="button" data-pq="-1" aria-label="Diminuir quantidade">−</button>
+        <b id="pdQty">1</b>
+        <button type="button" data-pq="1" aria-label="Aumentar quantidade">+</button>
+      </div>
+      <button class="btn btn-primary btn-lg" type="button" id="pdAdd">Adicionar · <span id="pdTotal">R$ 0,00</span></button>
+    </footer>
+  </div>
+</div>
 
 <!-- ============ CHECKOUT ============ -->
 <div class="modal" id="checkout" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
   <div class="modal-card">
     <header class="modal-head">
       <div>
-        <p class="eyebrow" id="checkoutStep">Etapa 1 de 3</p>
+        <p class="eyebrow"><span id="checkoutStep">Etapa 1 de 3</span><span class="demo-badge">demo</span></p>
         <h2 id="checkoutTitle">Como você quer receber?</h2>
       </div>
       <button class="icon-btn" id="checkoutClose" aria-label="Fechar">
@@ -428,6 +466,10 @@
     </header>
 
     <div class="steps-bar" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+    <p class="demo-note ck-demo">
+      <b>Modo demonstração.</b> Nada é cobrado e nenhum pedido chega à cozinha.
+      <button type="button" class="demo-fill" id="demoFill">Preencher com dados de exemplo</button>
+    </p>
 
     <form id="checkoutForm" novalidate>
       <!-- etapa 1: entrega -->
@@ -452,20 +494,20 @@
         <div class="fields" id="deliveryFields">
           <div class="f f-cep">
             <label for="ckCep">CEP</label>
-            <input id="ckCep" name="cep" inputmode="numeric" maxlength="9" placeholder="00000-000" autocomplete="postal-code">
+            <input enterkeyhint="next" id="ckCep" name="cep" inputmode="numeric" maxlength="9" placeholder="00000-000" autocomplete="postal-code">
             <small class="f-hint" id="ckCepHint">preenche o resto sozinho</small>
           </div>
           <div class="f f-street">
             <label for="ckStreet">Rua</label>
-            <input id="ckStreet" name="street" autocomplete="address-line1" placeholder="Rua das Cerejeiras">
+            <input enterkeyhint="next" id="ckStreet" name="street" autocomplete="address-line1" placeholder="Rua das Cerejeiras">
           </div>
           <div class="f f-num">
             <label for="ckNumber">Número</label>
-            <input id="ckNumber" name="number" inputmode="numeric" placeholder="128">
+            <input enterkeyhint="next" id="ckNumber" name="number" inputmode="numeric" placeholder="128">
           </div>
           <div class="f f-comp">
             <label for="ckComp">Complemento</label>
-            <input id="ckComp" name="comp" placeholder="apto 42 / bloco B">
+            <input enterkeyhint="next" id="ckComp" name="comp" placeholder="apto 42 / bloco B">
           </div>
           <div class="f f-hood">
             <label for="ckHood">Bairro</label>
@@ -473,15 +515,15 @@
           </div>
           <div class="f f-name">
             <label for="ckName">Seu nome</label>
-            <input id="ckName" name="name" autocomplete="name" placeholder="Como te chamamos?">
+            <input enterkeyhint="next" id="ckName" name="name" autocomplete="name" placeholder="Como te chamamos?">
           </div>
           <div class="f f-phone">
             <label for="ckPhone">WhatsApp</label>
-            <input id="ckPhone" name="phone" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-0000" maxlength="16">
+            <input enterkeyhint="next" id="ckPhone" name="phone" inputmode="tel" autocomplete="tel" placeholder="(11) 99999-0000" maxlength="16">
           </div>
           <div class="f f-note">
             <label for="ckNote">Observação pra cozinha</label>
-            <input id="ckNote" name="note" placeholder="sem cebola, ponto da carne, referência do prédio…">
+            <input enterkeyhint="done" id="ckNote" name="note" placeholder="sem cebola, ponto da carne, referência do prédio…">
           </div>
         </div>
       </section>
@@ -538,7 +580,7 @@
   <div class="modal-card modal-track">
     <header class="modal-head">
       <div>
-        <p class="eyebrow" id="trackCode">pedido</p>
+        <p class="eyebrow"><span id="trackCode">pedido</span><span class="demo-badge">demo</span></p>
         <h2 id="trackTitle">Pedido confirmado</h2>
       </div>
       <button class="icon-btn" id="trackClose" aria-label="Fechar">
@@ -576,6 +618,7 @@
             <path d="M-4-4h8v2h-8zm0 3h8v4a1.2 1.2 0 0 1-1.2 1.2h-5.6A1.2 1.2 0 0 1-4 3z" fill="#1a1310"/>
           </g>
         </svg>
+        <span class="map-demo">trajeto simulado</span>
         <div class="track-eta">
           <small id="etaLabel">chega em</small>
           <b id="etaValue">···</b>
@@ -586,12 +629,12 @@
 
       <div class="track-rider" id="trackRider" hidden>
         <div class="tr-av" aria-hidden="true">RS</div>
-        <div class="tr-txt"><b>Rafael está levando seu pedido</b><span>Moto Honda CG · placa BRS-1240</span></div>
-        <a class="btn btn-outline btn-sm" href="https://wa.me/5511999990000" target="_blank" rel="noopener">Chamar</a>
+        <div class="tr-txt"><b>Rafael está levando seu pedido</b><span>Moto Honda CG · placa BRS-0000</span><em class="tr-fake">entregador, moto e placa fictícios</em></div>
+        <button class="btn btn-outline btn-sm" type="button" id="riderCall">Chamar</button>
       </div>
 
       <div class="track-summary" id="trackSummary"></div>
-      <p class="track-demo">Simulação de demonstração: os status andam sozinhos pra você ver como fica. Em produção isso vem do sistema da cozinha.</p>
+      <p class="demo-note track-demo"><b>Pedido de demonstração.</b> Nada foi enviado à hamburgueria. Os status andam sozinhos em uns 2 minutos pra você ver como fica; num site de verdade quem muda o status é a cozinha.</p>
       <button class="btn btn-ghost btn-block btn-sm" id="trackCancel">Cancelar pedido de demonstração</button>
     </div>
   </div>
@@ -601,7 +644,7 @@
 
 <div class="mobile-bar" id="mobileBar">
   <a class="btn btn-outline" href="#cardapio">Cardápio</a>
-  <button class="btn btn-primary" id="mobileCart"><span id="mobileCartTxt">Ver pedido</span></button>
+  <button class="btn btn-primary" id="mobileCart"><span class="mb-count" id="mobileCartCount" hidden>0</span><span id="mobileCartTxt">Ver pedido</span></button>
 </div>
 
 <script src="js/app.js"></script>

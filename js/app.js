@@ -228,7 +228,7 @@ function renderMenu(cat = 'all') {
   const items = MENU.filter(m => cat === 'all' || m.cat === cat);
   grid.innerHTML = items.map(m => `
     <article class="card" data-id="${m.id}">
-      <div class="card-art">
+      <div class="card-art" data-open="${m.id}">
         ${m.img
           ? `<img src="${m.img}" alt="${m.name}" loading="lazy" decoding="async" width="720" height="540">`
           : burgerSVG(m.art)}
@@ -239,13 +239,13 @@ function renderMenu(cat = 'all') {
         }).join('')}</div>` : ''}
       </div>
       <div class="card-body">
-        <h3 class="card-name">${m.name}</h3>
+        <h3 class="card-name"><button type="button" class="card-link" data-open="${m.id}">${m.name}</button></h3>
         <p class="card-desc">${m.desc}</p>
         <div class="card-foot">
-          <div class="price">${BRL(m.price)}<small>com fritas +R$ 16</small></div>
-          <button class="card-add" data-add="${m.id}">
+          <div class="price">${BRL(m.price)}<small>combo com fritas +R$ 16</small></div>
+          <button class="card-add" data-add="${m.id}" aria-label="Adicionar ${m.name} ao carrinho">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6z"/></svg>
-            Adicionar
+            <span class="ca-txt">Adicionar</span>
           </button>
         </div>
       </div>
@@ -303,9 +303,55 @@ document.addEventListener('click', e => {
   if (b.classList.contains('card-add')) {
     b.classList.add('done');
     const old = b.innerHTML;
-    b.innerHTML = '✓ No carrinho';
+    b.innerHTML = '<span aria-hidden="true">✓</span><span class="ca-txt">No carrinho</span>';
     setTimeout(() => { b.classList.remove('done'); b.innerHTML = old; }, 1400);
   }
+});
+
+/* ============================================================
+   FICHA DO PRODUTO
+   Tocar na foto ou no nome abre a ficha: combo, quantidade e
+   observação. É o que torna real o "combo com fritas +R$ 16" do card.
+   ============================================================ */
+const COMBO = 16;
+const pd = { item: null, qty: 1, combo: false };
+function pdTotal() { return (pd.item.price + (pd.combo ? COMBO : 0)) * pd.qty; }
+function pdSync() {
+  $('#pdQty').textContent = pd.qty;
+  $('#pdTotal').textContent = BRL(pdTotal());
+}
+function openProduct(id) {
+  const m = MENU.find(x => x.id === id); if (!m) return;
+  Object.assign(pd, { item: m, qty: 1, combo: false });
+  $('#pdArt').innerHTML = m.img ? `<img src="${m.img}" alt="${m.name}" width="720" height="540">` : burgerSVG(m.art, 220);
+  $('#pdName').textContent = m.name;
+  $('#pdDesc').textContent = m.desc;
+  $('#pdPrice').textContent = BRL(m.price);
+  $('#pdCombo').checked = false;
+  $('#pdNote').value = '';
+  pdSync();
+  openModal($('#product'));
+  $('.modal-card', $('#product')).scrollTop = 0;
+}
+document.addEventListener('click', e => {
+  const o = e.target.closest('[data-open]');
+  if (o && !e.target.closest('[data-add]')) openProduct(o.dataset.open);
+});
+$('#pdCombo')?.addEventListener('change', e => { pd.combo = e.target.checked; pdSync(); });
+$$('[data-pq]').forEach(b => b.addEventListener('click', () => {
+  pd.qty = clamp(pd.qty + +b.dataset.pq, 1, 20); pdSync();
+}));
+$('#pdClose')?.addEventListener('click', () => closeModal($('#product')));
+$('#product')?.addEventListener('click', e => { if (e.target.id === 'product') closeModal($('#product')); });
+$('#pdAdd')?.addEventListener('click', () => {
+  const m = pd.item, note = $('#pdNote').value.trim();
+  addToCart({
+    key: m.id + (pd.combo ? '+combo' : '') + (note ? '|' + note : ''),
+    name: m.name + (pd.combo ? ' em combo' : ''),
+    desc: [pd.combo ? 'com fritas rústicas + lata' : '', note ? 'obs: ' + note : ''].filter(Boolean).join(' · '),
+    price: m.price + (pd.combo ? COMBO : 0), img: m.img, art: m.art
+  }, pd.qty);
+  closeModal($('#product'));
 });
 
 /* ============================================================
@@ -355,8 +401,9 @@ function renderCart() {
     if (miss > 0) { txt.className = 'sp-txt'; txt.innerHTML = `Faltam <b>${BRL(miss)}</b> pra ganhar o frete.`; }
     else { txt.className = 'sp-txt free'; txt.textContent = '🎉 Frete grátis liberado!'; }
   }
-  const mt = $('#mobileCartTxt');
+  const mt = $('#mobileCartTxt'), mc = $('#mobileCartCount');
   if (mt) mt.textContent = n ? `Ver pedido · ${BRL(sub)}` : 'Ver pedido';
+  if (mc) { mc.hidden = !n; mc.textContent = n; }
 }
 function bump() {
   const el = $('#cartCount'); if (!el || REDUCED) return;
@@ -401,6 +448,7 @@ addEventListener('keydown', e => {
   if ($('#cart').classList.contains('on')) openCart(false);
   if ($('#checkout').classList.contains('on')) closeModal($('#checkout'));
   if ($('#tracking').classList.contains('on')) closeModal($('#tracking'));
+  if ($('#product').classList.contains('on')) closeModal($('#product'));
 });
 
 /* ============================================================
@@ -565,8 +613,10 @@ function gotoStep(n) {
   $$('.steps-bar i').forEach((i, idx) => i.classList.toggle('on', idx < ck.step));
   $('#checkoutStep').textContent = `Etapa ${ck.step} de 3`;
   $('#checkoutTitle').textContent = ['Como você quer receber?', 'Como prefere pagar?', 'Confere e confirma'][ck.step - 1];
-  $('#ckNext').textContent = ck.step === 3 ? 'Confirmar pedido' : 'Continuar';
+  $('#ckNext').textContent = ck.step === 3 ? 'Simular pedido' : 'Continuar';
   $('#ckBack').style.visibility = ck.step === 1 ? 'hidden' : 'visible';
+  /* o aviso do topo só na etapa 1: na 2 o Pix já avisa e na 3 tem aviso próprio */
+  $('.ck-demo').hidden = ck.step !== 1;
   $('#ckTotal').textContent = BRL(total());
   if (ck.step === 3) renderReview();
   $('.modal-card', $('#checkout')).scrollTop = 0;
@@ -624,7 +674,12 @@ function validateStep1() {
     const bad = !v || (id === 'ckPhone' && v.replace(/\D/g, '').length < 10);
     if (bad) { el.closest('.f').classList.add('err'); ok = false; }
   });
-  if (!ok) toast('Falta preencher algo aí em cima', '✍️');
+  if (!ok) {
+    toast('Falta preencher algo aí em cima', '✍️');
+    const first = $('.f.err input, .f.err select');
+    first?.scrollIntoView({ block: 'center', behavior: REDUCED ? 'auto' : 'smooth' });
+    first?.focus({ preventScroll: true });
+  }
   return ok;
 }
 function addrText() {
@@ -657,8 +712,19 @@ function renderReview() {
     <div class="rv-block">
       <h4>Previsão</h4>
       <p class="rv-addr">${ck.mode === 'pickup' ? 'Pronto pra retirar em 15 a 20 min' : `Na sua porta em ${z.time}`}</p>
-    </div>`;
+    </div>
+    <p class="demo-note"><b>Isto é uma simulação.</b> Ao tocar em "Simular pedido" nada é cobrado e nenhum pedido é enviado à hamburgueria. Você só vê como o cliente acompanharia a entrega.</p>`;
 }
+$('#demoFill')?.addEventListener('click', () => {
+  const v = { ckCep: '01000-000', ckStreet: 'Rua das Cerejeiras', ckNumber: '200', ckComp: 'apto 12',
+    ckName: 'Cliente Teste', ckPhone: '(11) 90000-0000', ckNote: 'sem cebola, por favor' };
+  Object.entries(v).forEach(([id, val]) => { const el = $('#' + id); if (el) el.value = val; });
+  $('#ckHood').value = 'centro';
+  $('#ckCepHint').textContent = 'dados de exemplo';
+  $$('.f').forEach(f => f.classList.remove('err'));
+  $('#ckTotal').textContent = BRL(total());
+  toast('Preenchido com dados de exemplo', '🧪');
+});
 $('#ckBack')?.addEventListener('click', () => gotoStep(ck.step - 1));
 $('#ckNext')?.addEventListener('click', () => {
   if (ck.step === 1 && !validateStep1()) return;
@@ -724,7 +790,7 @@ function placeOrder() {
   $('#trackBtn').hidden = false;
   renderTracking(true);
   openModal($('#tracking'));
-  toast('Pedido ' + order.code + ' confirmado!', '✅', true);
+  toast('Pedido de demonstração ' + order.code + ' criado', '✅', true);
 }
 
 let routeLen = 0;
@@ -791,6 +857,8 @@ $('#trackCancel')?.addEventListener('click', () => {
   closeModal($('#tracking'));
   toast('Pedido de demonstração cancelado', '🗑️');
 });
+/* o botão do entregador não pode abrir WhatsApp de ninguém: é tudo fictício */
+$('#riderCall')?.addEventListener('click', () => toast('Na versão real, abre o WhatsApp do entregador', '🛵'));
 setInterval(() => { if (order) renderTracking(); }, 1000);
 
 /* ============================================================
@@ -852,17 +920,23 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 }), { threshold: .12, rootMargin: '0px 0px -8% 0px' });
 function observeReveals() { $$('.reveal').forEach(el => io.observe(el)); }
 
+/* O HTML já traz o número final (4,9/5, 35, 180). A contagem é enfeite:
+   se a aba estiver em segundo plano o requestAnimationFrame para, e sem
+   isso o número podia ficar travado no 0. Por isso o timeout no fim
+   sempre grava o valor certo. */
 function countTo(el) {
   const to = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0);
-  if (REDUCED) { el.textContent = to.toFixed(dec).replace('.', ','); return; }
+  const suf = el.dataset.suffix ? `<small>${el.dataset.suffix}</small>` : '';
+  const put = v => { el.innerHTML = v.toFixed(dec).replace('.', ',') + suf; };
+  if (REDUCED || document.hidden) return put(to);
   const t0 = performance.now(), dur = 1100;
   const tick = now => {
     const p = clamp((now - t0) / dur, 0, 1);
-    const v = to * (1 - Math.pow(1 - p, 3));
-    el.textContent = v.toFixed(dec).replace('.', ',');
+    put(to * (1 - Math.pow(1 - p, 3)));
     if (p < 1) requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
+  setTimeout(() => put(to), dur + 400);
 }
 
 /* ============================================================
